@@ -1,0 +1,32 @@
+# config.yaml
+
+infer:
+  device: "cuda:1"
+  batch: 32
+
+logging:
+  logfile: "/data/output_tmp/yangfan/rag/log/rag.log"   # 日志文件路径，自动创建logs文件夹
+
+library:
+  chunk_size: 2000
+  chunk_overlap: 200
+  path: "/data/output_tmp/yangfan/rag/data/2025"  # 本地知识库文件夹路径
+  record_file: "/data/output_tmp/yangfan/rag/data/cache/ingested.json"  # 已导入文件记录文件路径
+
+embedding:
+  model_name: "/data/output_tmp/yangfan/rag/model/qwen/Qwen3-Embedding-0___6B"  # 向量模型名称
+  index_path: "/data/output_tmp/yangfan/rag/data/cache/faiss_index"  # 向量索引保存路径
+
+llm:
+  model_name: "/data/output_tmp/yangfan/rag/model/qwen/Qwen3-0___6B"              # ChatGLM模型名称
+  temperature: 0.7                       # 生成温度参数（如需在代码中扩展）
+  trust_remote_code: true
+
+retriever:
+  chain_type: "stuff"                   # LangChain RetrievalQA链类型
+
+# 额外说明:
+# - 确保路径存在，或者程序运行前手动创建对应目录
+# - 日志文件会写入 logs/rag_project.log，方便统一查看日志
+# - library/path 为你的本地知识库文件夹，可放置txt/pdf文件
+# - embedding/index_path 会存储或加载向量数据库索引
