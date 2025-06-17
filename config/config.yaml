@@ -1,6 +1,7 @@
 # config.yaml
 
 infer:
+  prompt_lang: bio_qa_zh
   device: "cuda:1"
   batch: 32
 
