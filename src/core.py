@@ -82,7 +82,6 @@ class Core:
                 question_generator=question_generator,
                 combine_docs_chain=combine_docs_chain,
                 verbose=True,
-                return_source_documents=True
             )
             self.logger.info("Conversational retrieval chain initialized with refine mode.")
         else:

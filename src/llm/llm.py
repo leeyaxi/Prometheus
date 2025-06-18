@@ -12,6 +12,9 @@ class LlmLoader(LLM):
 
     model_name: str = "meta-llama/Meta-Llama-3-8B-Instruct"
     temperature: float = 0.7
+    top_p: float = 0.8
+    top_k: int = 20
+    min_p: float = 0.0
     trust_remote_code: bool = True
     device: str = "cuda:0"
 
@@ -36,13 +39,24 @@ class LlmLoader(LLM):
         outputs = self._model.generate(
             **inputs,
             max_new_tokens=1024,
-            temperature=self.temperature,
-            do_sample=True,
+            temperature=self._module_conf.get("temperature", self.temperature),
+            do_sample=False,
+            top_p=self._module_conf.get("top_p", self.top_p),
+            top_k=self._module_conf.get("top_k", self.top_k),
+            min_p=self._module_conf.get("min_p", self.min_p),
             eos_token_id=self._tokenizer.eos_token_id,
             pad_token_id=self._tokenizer.pad_token_id,
-        )
 
-        decoded = self._tokenizer.decode(outputs[0], skip_special_tokens=True)
+        )
+        input_len = inputs['input_ids'].shape[1]
+        output_ids = outputs[0][input_len:]
+        try:
+            # rindex finding 151668 (</think>)
+            index = len(output_ids) - output_ids[::-1].index(151668)
+        except ValueError:
+            index = 0
+
+        decoded = self._tokenizer.decode(output_ids, skip_special_tokens=True)
         if stop:
             for s in stop:
                 decoded = decoded.split(s)[0]

@@ -3,7 +3,7 @@
 infer:
   prompt_lang: bio_qa_zh
   device: "cuda:1"
-  batch: 32
+  batch: 16
 
 logging:
   logfile: "/data/output_tmp/yangfan/rag/log/rag.log"   # 日志文件路径，自动创建logs文件夹
@@ -20,7 +20,10 @@ embedding:
 
 llm:
   model_name: "/data/output_tmp/yangfan/rag/model/qwen/Qwen3-0___6B"              # ChatGLM模型名称
-  temperature: 0.7                       # 生成温度参数（如需在代码中扩展）
+  temperature: 0.7
+  top_p: 0.8
+  top_k: 20
+  min_p: 0
   trust_remote_code: true
 
 retriever:

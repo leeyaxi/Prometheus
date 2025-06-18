@@ -125,9 +125,9 @@ class DocumentLoader(BaseModule):
         if suffix == ".pdf":
             ocr_texts = self._extract_images_from_pdf(path)
             docs = [Document(
-                page_content=ocr_texts,
-                metadata={"source": str(path), "type": "ocr"}
-            )]
+                        page_content=text,
+                        metadata={"source": str(path), "type": "pic", "page_number": idx + 1}
+                    )  for idx, text in enumerate(ocr_texts)]
             return docs
         if not loader_cls:
             raise ValueError(f"Unsupported file type: {suffix}")
@@ -138,10 +138,10 @@ class DocumentLoader(BaseModule):
             doc.page_content = clean_chinese_docx_text(doc.page_content)
         if suffix == ".docx":
             ocr_texts = self._extract_images_from_docx(path)
-            docs.append(Document(
-                page_content=ocr_texts,
-                metadata={"source": str(path), "type": "ocr"}
-            ))
+            docs.extend([Document(
+                        page_content=text,
+                        metadata={"source": str(path), "type": "pic", "page_number": idx + 1}
+                    )  for idx, text in enumerate(ocr_texts)])
         return docs
 
     def load(self) -> List[Document]:
